@@ -159,8 +159,8 @@ function App() {
   }, [customNodeSet, data]);
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
+    <div >
+      {/* <CssBaseline /> */}
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {

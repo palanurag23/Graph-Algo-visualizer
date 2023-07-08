@@ -224,6 +224,7 @@ const Graph = ({
         links: argLinks,
         focusedNodeId: focusId ? oldToNewId[focusId] : undefined
       }}
+      // @ts-ignore
       config={myConfig}
     />
   );
