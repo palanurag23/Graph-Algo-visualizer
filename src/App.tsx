@@ -19,13 +19,20 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  Slider
+  Slider,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { useStyles } from "./styles/useStyles";
-import { Menu as MenuIcon, ChevronLeft as ChevronLeftIcon } from "@material-ui/icons";
-import { LabelWithTooltip, ColorButton, SelectedButton } from "./utils/helperComponents";
+import {
+  Menu as MenuIcon,
+  ChevronLeft as ChevronLeftIcon,
+} from "@material-ui/icons";
+import {
+  LabelWithTooltip,
+  ColorButton,
+  SelectedButton,
+} from "./utils/helperComponents";
 import { TreeNode } from "./layout/treeLayout";
 import SearchBar from "material-ui-search-bar";
 
@@ -34,8 +41,17 @@ const DEFAULT_LAYOUT_TYPE = LayoutType.Tree;
 const DEFAULT_GRAPH_INPUT = ``;
 const DEFAULT_CUSTOM_NODES_INPUT = "[]";
 
-export type MyGraphNodeType = { id: string; label: string; x?: number; y?: number };
-export type MyGraphLinkType = { source: string; target: string; label?: string };
+export type MyGraphNodeType = {
+  id: string;
+  label: string;
+  x?: number;
+  y?: number;
+};
+export type MyGraphLinkType = {
+  source: string;
+  target: string;
+  label?: string;
+};
 export type MyDataType = {
   nodes: Array<MyGraphNodeType>;
   links: Array<MyGraphLinkType>;
@@ -57,7 +73,9 @@ function App() {
   const [directed, setDirected] = React.useState(true);
   const [oneIndexed, setOneIndexed] = React.useState(false); // used for adjacency lists
   const [reverseEdges, setReverseEdges] = React.useState(false); // used for edge pairs
-  const [customNodes, setCustomNodes] = React.useState(DEFAULT_CUSTOM_NODES_INPUT);
+  const [customNodes, setCustomNodes] = React.useState(
+    DEFAULT_CUSTOM_NODES_INPUT
+  );
 
   const [allNodes, setAllNodes] = React.useState<Array<string>>([]);
   const [startNode, setStartNode] = React.useState<string | null>(null);
@@ -70,11 +88,12 @@ function App() {
   const [customNodeSet, setCustomNodeSet] = React.useState(new Set<string>());
   const [data, setData] = React.useState<MyDataType>({
     nodes: [],
-    links: []
+    links: [],
   });
 
   // layout
-  const [selectedLayout, setSelectedLayout] = React.useState(DEFAULT_LAYOUT_TYPE);
+  const [selectedLayout, setSelectedLayout] =
+    React.useState(DEFAULT_LAYOUT_TYPE);
   const [searchInputValue, setSearchInputValue] = React.useState("");
   const [searchText, setSearchText] = React.useState("");
 
@@ -93,7 +112,7 @@ function App() {
     try {
       parsedValue = ParseUtils.processInput(inputValue, comboValue, {
         oneIndexed,
-        reverseEdges
+        reverseEdges,
       });
 
       if (parsedValue.nodeSet.size === 0) {
@@ -113,10 +132,12 @@ function App() {
 
     const nodeToLabel = parsedValue.nodeToLabel ? parsedValue.nodeToLabel : {};
 
-    parsedValue.nodes = Array.from(parsedValue.nodeSet).map(nodeId => {
+    parsedValue.nodes = Array.from(parsedValue.nodeSet).map((nodeId) => {
       return {
         id: nodeId as string,
-        label: nodeToLabel.hasOwnProperty(nodeId) ? nodeToLabel[nodeId as string] : nodeId
+        label: nodeToLabel.hasOwnProperty(nodeId)
+          ? nodeToLabel[nodeId as string]
+          : nodeId,
       };
     });
     if (parsedValue.startNode) {
@@ -159,12 +180,12 @@ function App() {
   }, [customNodeSet, data]);
 
   return (
-    <div >
-      {/* <CssBaseline /> */}
+    <div>
+      <CssBaseline />
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
-          [classes.appBarShift]: drawerOpen
+          [classes.appBarShift]: drawerOpen,
         })}
       >
         <Toolbar>
@@ -183,8 +204,8 @@ function App() {
             Choose Layout Type:
           </Typography>
           {Object.keys(LayoutType)
-            .filter(k => typeof LayoutType[k as any] !== "number")
-            .map(key => {
+            .filter((k) => typeof LayoutType[k as any] !== "number")
+            .map((key) => {
               let currLayoutType = parseInt(key);
               return currLayoutType === selectedLayout ? (
                 <SelectedButton
@@ -213,13 +234,13 @@ function App() {
           <div className={classes.searchBar}>
             <SearchBar
               value={searchInputValue}
-              onChange={newValue => setSearchInputValue(newValue)}
+              onChange={(newValue) => setSearchInputValue(newValue)}
               onRequestSearch={() => setSearchText(searchInputValue)}
               onCancelSearch={() => setSearchText("")}
               placeholder={"Search Nodes"}
               style={{
                 width: 180,
-                height: 36
+                height: 36,
               }}
             />
           </div>
@@ -231,13 +252,26 @@ function App() {
         anchor="left"
         open={drawerOpen}
         classes={{
-          paper: classes.drawerPaper
+          paper: classes.drawerPaper,
         }}
       >
         <div className={classes.drawerHeader}>
-          <Typography className={classes.drawerHeaderText} variant="h6" noWrap>
-            Graph Input
-          </Typography>
+          <div>
+            <Typography
+              className={classes.drawerHeaderText}
+              variant="h6"
+              noWrap
+            >
+              Anurag Pal
+            </Typography>
+            <Typography
+              className={classes.drawerHeaderText}
+              variant="h6"
+              noWrap
+            >
+              Abhinav Mishra
+            </Typography>
+          </div>
           <IconButton
             onClick={() => {
               setDrawerOpen(false);
@@ -265,7 +299,7 @@ function App() {
               rowsMax={10}
               variant="outlined"
               value={inputValue}
-              onChange={event => {
+              onChange={(event) => {
                 setInputValue(event.target.value);
               }}
               error={graphInputError.length > 0}
@@ -280,14 +314,16 @@ function App() {
               value={comboValue}
               className={classes.selectEmpty}
               variant="outlined"
-              onChange={e => {
+              onChange={(e) => {
                 setComboValue(parseInt(e.target.value as string));
               }}
             >
               {Object.keys(InputType)
-                .filter(k => typeof InputType[k as any] !== "number")
-                .sort((a, b) => getLabel(parseInt(a)).localeCompare(getLabel(parseInt(b))))
-                .map(key => (
+                .filter((k) => typeof InputType[k as any] !== "number")
+                .sort((a, b) =>
+                  getLabel(parseInt(a)).localeCompare(getLabel(parseInt(b)))
+                )
+                .map((key) => (
                   <MenuItem key={key} value={key}>
                     {getLabel(parseInt(key))}
                   </MenuItem>
@@ -300,7 +336,7 @@ function App() {
               control={
                 <Checkbox
                   checked={oneIndexed}
-                  onChange={e => setOneIndexed(!oneIndexed)}
+                  onChange={(e) => setOneIndexed(!oneIndexed)}
                   name="oneIndexedValue"
                   color="primary"
                 />
@@ -314,7 +350,7 @@ function App() {
               control={
                 <Checkbox
                   checked={reverseEdges}
-                  onChange={e => setReverseEdges(!reverseEdges)}
+                  onChange={(e) => setReverseEdges(!reverseEdges)}
                   name="reverseValue"
                   color="primary"
                 />
@@ -327,7 +363,7 @@ function App() {
             control={
               <Checkbox
                 checked={directed}
-                onChange={e => setDirected(!directed)}
+                onChange={(e) => setDirected(!directed)}
                 name="directedValue"
                 color="primary"
               />
@@ -338,11 +374,19 @@ function App() {
             <Autocomplete
               options={allNodes}
               value={startNode && startNode.length > 0 ? startNode : null}
-              onChange={(event: React.ChangeEvent<{}>, newValue: string | null) => {
+              onChange={(
+                event: React.ChangeEvent<{}>,
+                newValue: string | null
+              ) => {
                 if (newValue) setStartNode(newValue);
               }}
               renderInput={(params: any) => (
-                <TextField {...params} label="Start Node" margin="normal" variant="outlined" />
+                <TextField
+                  {...params}
+                  label="Start Node"
+                  margin="normal"
+                  variant="outlined"
+                />
               )}
             />
           </FormControl>
@@ -365,7 +409,7 @@ function App() {
               rowsMax={10}
               variant="outlined"
               value={customNodes}
-              onChange={event => {
+              onChange={(event) => {
                 setCustomNodes(event.target.value);
               }}
               error={customNodesInputError.length > 0}
@@ -376,7 +420,7 @@ function App() {
       </Drawer>
       <main
         className={clsx(classes.mainContent, {
-          [classes.contentShift]: drawerOpen
+          [classes.contentShift]: drawerOpen,
         })}
       >
         <div className={classes.drawerHeader} />
@@ -394,24 +438,25 @@ function App() {
           verticalSpacing={verticalSlider}
         />
         <div className={classes.sliders}>
-          {selectedLayout !== LayoutType.ForceLayout && selectedLayout !== LayoutType.Random && (
-            <>
-              <Typography id="continuous-slider" gutterBottom>
-                Horizontal Spacing
-              </Typography>
-              <Slider
-                value={horizontalSlider}
-                onChange={(event, newValue) => {
-                  setHorizontalSlider(newValue as number);
-                }}
-                aria-labelledby="discrete-slider"
-                step={1}
-                marks
-                min={0}
-                max={4}
-              />
-            </>
-          )}
+          {selectedLayout !== LayoutType.ForceLayout &&
+            selectedLayout !== LayoutType.Random && (
+              <>
+                <Typography id="continuous-slider" gutterBottom>
+                  Horizontal Spacing
+                </Typography>
+                <Slider
+                  value={horizontalSlider}
+                  onChange={(event, newValue) => {
+                    setHorizontalSlider(newValue as number);
+                  }}
+                  aria-labelledby="discrete-slider"
+                  step={1}
+                  marks
+                  min={0}
+                  max={4}
+                />
+              </>
+            )}
           {selectedLayout !== LayoutType.ForceLayout &&
             selectedLayout !== LayoutType.Random &&
             selectedLayout !== LayoutType.Arc && (
